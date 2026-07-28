@@ -229,7 +229,7 @@
       </div>
       <div class="titleblock">
         <h1>MONEY FLEET</h1>
-        <div class="sub">J.A.R.V.I.S // autonomous earners</div>
+        <div class="sub">J.A.R.V.I.S // 8 earners · 5 platforms</div>
       </div>
     </div>
     <div class="spacer"></div>
@@ -265,10 +265,10 @@
   </section>
 
   <section class="kpis">
-    <div class="kpi hud"><div class="l">Agents online</div><div class="v">3 / 3</div><div class="d up">all ship-ready</div></div>
+    <div class="kpi hud"><div class="l">Earners in fleet</div><div class="v">8</div><div class="d up">across 5 platforms</div></div>
+    <div class="kpi hud"><div class="l">Live / Published</div><div class="v">2</div><div class="d up">blog + KDP book</div></div>
+    <div class="kpi hud"><div class="l">Building now</div><div class="v">4</div><div class="d">KDP #2 · Redbubble · Gumroad · YouTube</div></div>
     <div class="kpi hud"><div class="l">Tests passing</div><div class="v">88</div><div class="d">6 + 37 + 45</div></div>
-    <div class="kpi hud"><div class="l">Products generated</div><div class="v">18</div><div class="d">product-factory</div></div>
-    <div class="kpi hud"><div class="l">Git repos committed</div><div class="v">3</div><div class="d">ready to deploy</div></div>
   </section>
 
   <div class="section-h"><span class="bar"></span><h2>The Fleet</h2><span class="note">click a unit for full dossier</span></div>
@@ -318,7 +318,7 @@
   <section class="panel hud"><div class="tl" id="tl"></div></section>
 
   <footer>
-    <span>Data as of 2026-07-27 · snapshot (live wiring is the provisioning step)</span>
+    <span>Data as of 2026-07-28 · 8 earners · KDP published · 4 building</span>
     <span>Series palette: validated dark slots · WCAG table view + pattern channel</span>
   </footer>
 </div>
@@ -331,36 +331,71 @@
 
 <script>
 const AGENTS = [
-  { key:"content", cls:"s1", name:"content-engine", role:"StarHopper · astronomy content + affiliate",
-    accent:"--series-1", tests:"6/6", artifact:"0 posts live", sched:"Tue & Fri",
-    head:"b8bdaa0", repo:"money-fleet/content-engine",
-    next:"Needs a free Groq key to draft (research already runs live).",
-    mech:"GitHub Actions cron (Tue/Fri) → research (Wikipedia REST + NASA APOD/CNEOS) → grounded LLM draft with inline citations → fact-check + FTC-compliant affiliate links → publish (Hashnode or static site) → repurpose to newsletter + Bluesky + Mastodon. Deterministic topic rotation; 12h idempotency guard.",
-    steps:["Free Groq key (LLM_API_KEY) — the only required key","Hashnode blog + token (or static site on GitHub Pages)","Buttondown newsletter (free to 100 subs)","Bluesky + Mastodon app passwords","Amazon Associates tag","Push to GitHub, add secrets, hit Run workflow"],
-    cav:["No editorial review before publish — occasional weak draft slips out","Affiliate links are the /s?k= search form until you add real ASINs","Verify Hashnode auth header on first publish (drop ‘Bearer’ if it 401s)","$0 revenue for the first 1–3 months; SEO compounds slowly"] },
-  { key:"factory", cls:"s2", name:"product-factory", role:"printables → Stripe + Netlify storefront",
-    accent:"--series-2", tests:"37/37", artifact:"18 products", sched:"Daily",
-    head:"e5e68be", repo:"money-fleet/product-factory",
-    next:"Paywall hardened — adversary found & fixed an SVG leak.",
-    mech:"Daily cron → research niches (curated taxonomy + Datamuse) → generate multi-page PDF / procedural SVG products → package (ZIP + metadata + license) → publish via Stripe Checkout + Netlify Blobs, access-controlled by a Netlify Function that verifies a paid session or a webhook-minted HMAC token → rebuild storefront. Rolling 90-day product cap.",
-    steps:["Netlify site + auth token + site id","Stripe secret key + webhook secret","Netlify Blob store (NETLIFY_BLOB_STORE)","Register /stripe-webhook for checkout.session.completed","Push, add secrets, run one real cycle + a test purchase"],
-    cav:["Live Stripe purchase not yet exercised here (no creds) — verified against mocked Stripe/Blobs","Distribution is the real constraint (no-name storefront)","Lemon Squeezy adapter creates the listing only; file-attach is manual","Production build ships no public files; local-browse demo keeps /files/ for npx serve"] },
-  { key:"saas", cls:"s3", name:"micro-saas", role:"pkgprobe · npm dep-risk CLI (open-core PRO)",
-    accent:"--series-3", tests:"45/45", artifact:"0 installs", sched:"Daily",
-    head:"74d3b93", repo:"money-fleet/micro-saas",
-    next:"PRO tier built out + auto key-issuance; publish to npm to start.",
-    mech:"Daily GitHub Action → schema-watch (asserts npm + OSV response shapes; alerts + withholds publish on drift) → semver-safe self-bump gated on npm test → guarded npm publish (only-if-changed, 23h rate cap). Open-core PRO via Stripe + a one-file Cloudflare Worker (team dashboard + CI fail-policy); automated key issuance on checkout.session.completed.",
-    steps:["npm account + Automation token (NPM_TOKEN)","Set REPO_URL and run tools/set-repo-url.js (replaces USER placeholder)","Push to GitHub, add NPM_TOKEN secret, npm publish","(PRO) Stripe product + Cloudflare Worker + KV namespace + webhook","Enable the GitHub Action loop"],
-    cav:["Self-bump republish is largely dormant (deps are caret-pinned) — it stays correct, not actively republishing","PRO only earns once real installs accrue (hundreds–thousands)","Hosted Worker can’t read a buyer’s lockfile — uses range floor unless caller passes installedVersion","Pick a genuinely unique package name; space is crowded (npm audit, Dependabot, Renovate)"] },
+  { key:"blog", cls:"s1", name:"First Light Blog", role:"Astronomy content + Amazon affiliate",
+    accent:"--series-1", tests:"6/6", artifact:"6 posts live", sched:"Tue & Fri",
+    head:"bf642fb", repo:"money-fleet/content-engine",
+    status:"LIVE", next:"Affiliate links armed (firstlight03-20). Needs traffic to earn.",
+    mech:"GitHub Actions → research → Groq draft → fact-check → affiliate gear links → publish to GitHub Pages. Live at ghlsalama.github.io/money-fleet-content-engine/. Night-sky theme, 6 cited articles, FTC-compliant.",
+    steps:["Groq key set (LLM_API_KEY)","SITE_NAME=First Light, BLOG_BASE_URL set","Amazon Associates tag: firstlight03-20","All 6 articles retrofitted with affiliate links"],
+    cav:["Needs traffic (distribution gap)","Hashnode deferred (API endpoint moved)","~2 posts/week (topic rotation)"] },
+  { key:"kdp1", cls:"s2", name:"KDP Book #1", role:"Large Print Word Search — 100 puzzles",
+    accent:"--series-2", tests:"Chrome HTML", artifact:"PUBLISHED", sched:"On Amazon",
+    head:"—", repo:"money-fleet/kdp-factory", status:"PUBLISHED",
+    next:"Submitted to Amazon — review ~24-72h, then live & searchable worldwide.",
+    mech:"Chrome HTML interior (100 themed puzzles + solutions, 8.5x11, 129pp) + pdfkit full-wrap cover with 0.125in bleed. $9.99, matte, white paper. AI-disclosed.",
+    steps:["Interior: Chrome HTML→PDF (perfect grid)","Cover: pdfkit full-wrap with bleed","Uploaded to kdp.amazon.com","AI content disclosed, worldwide rights"],
+    cav:["~$1.50-2.50/sale royalty","30% US withholding (register UTR later for 0%)","KDP rewards volume — spin more books"] },
+  { key:"kdp2", cls:"s2", name:"KDP Book #2", role:"Bible & Faith word search (building)",
+    accent:"--series-2", tests:"building", artifact:"in pipeline", sched:"—",
+    head:"—", repo:"money-fleet/kdp-factory-2", status:"BUILDING",
+    next:"Agent building — different niche (Bible/Christian = top KDP seller).",
+    mech:"Same factory, new niche + themes (Books of Bible, Disciples, Psalms, Miracles...) + new cover palette. Chrome HTML interior + bleed cover.",
+    steps:["Agent copying + modifying factory","New Bible-themed word lists","Chrome HTML interior + cover","Upload to KDP when ready"],
+    cav:["Different Amazon search = more products earning","Bible niche: loyal repeat buyers"] },
+  { key:"redbubble", cls:"s3", name:"Redbubble POD", role:"15-20 t-shirt/poster designs (building)",
+    accent:"--series-3", tests:"building", artifact:"in pipeline", sched:"—",
+    head:"—", repo:"money-fleet/redbubble", status:"BUILDING",
+    next:"Agent generating SVG→PNG designs — motivational, astronomy, tech humor.",
+    mech:"SVG designs → Chrome PNG render → upload to Redbubble (free, no approval). Redbubble prints + ships per order. Designer sets margin on top of base price.",
+    steps:["Agent generating 15-20 original designs","Each as high-res PNG + listing metadata","Upload to redbubble.com (free account)","Apply to products: tees, posters, mugs, stickers"],
+    cav:["Original designs only (no copyright)","Volume + trending themes = sales","Redbubble handles everything post-upload"] },
+  { key:"gumroad", cls:"s1", name:"Gumroad Digital", role:"500+ AI Prompts PDF (building)",
+    accent:"--series-1", tests:"building", artifact:"in pipeline", sched:"—",
+    head:"—", repo:"money-fleet/gumroad", status:"BUILDING",
+    next:"Agent creating categorized prompt library — productivity, coding, creative.",
+    mech:"500+ genuinely useful AI prompts organized by category → polished PDF via Chrome → list on Gumroad. 100% margin digital download, $9-19.",
+    steps:["Agent generating 500+ categorized prompts","Chrome HTML → polished PDF","List on gumroad.com (free)","Gumroad handles payments + delivery"],
+    cav:["100% margin, infinite inventory","Needs traffic (share link on social)","Quality prompts = reviews + repeat buyers"] },
+  { key:"youtube", cls:"s2", name:"Faceless Videos", role:"5 YouTube/TikTok shorts (building)",
+    accent:"--series-2", tests:"building", artifact:"in pipeline", sched:"—",
+    head:"—", repo:"money-fleet/youtube", status:"BUILDING",
+    next:"Agent producing Mind-Blowing Facts — scripts + AI voiceover + slides + MP4.",
+    mech:"Hook-driven scripts → macOS 'say' TTS → styled HTML slides → Chrome PNG → ffmpeg MP4 assembly. Algorithm distributes on YouTube Shorts / TikTok.",
+    steps:["Agent writing 5 engaging scripts","macOS 'say' voiceover (free TTS)","Styled slides → Chrome render → MP4","Post 1-2x/day on Shorts + TikTok"],
+    cav:["Monetize via YPP (1k subs / 10k views)","Algorithm = built-in distribution","Daily posting consistency is key"] },
+  { key:"factory", cls:"s3", name:"product-factory", role:"printables → Stripe + Netlify",
+    accent:"--series-3", tests:"37/37", artifact:"18 products", sched:"Daily",
+    head:"e5e68be", repo:"money-fleet/product-factory", status:"READY",
+    next:"Paywall hardened — deploy needs Netlify + Stripe accounts.",
+    mech:"Daily cron → generate PDF/SVG → Stripe checkout + Netlify Blobs (access-controlled) → storefront.",
+    steps:["Netlify + Stripe + webhook","Push + add secrets","Run real cycle + test purchase"],
+    cav:["Not yet deployed","Distribution is the constraint"] },
+  { key:"saas", cls:"s1", name:"pkgprobe (npm)", role:"dep-risk CLI · open-core PRO",
+    accent:"--series-1", tests:"45/45", artifact:"0 installs", sched:"Daily",
+    head:"74d3b93", repo:"money-fleet/micro-saas", status:"READY",
+    next:"Publish to npm to start (needs NPM_TOKEN).",
+    mech:"Daily GitHub Action → schema-watch → self-bump → npm publish. PRO via Stripe + Cloudflare Worker.",
+    steps:["npm account + token","Push + npm publish","(PRO) Stripe + Worker"],
+    cav:["Needs installs for revenue","PRO built out, needs traffic"] },
 ];
-const MONTHLY = { content:[0,0,1,3,6,10,15,22,30,42,55,70], factory:[0,0,0,1,2,3,5,7,10,14,18,24], saas:[0,0,0,0,0,1,2,3,5,8,12,18] };
+const MONTHLY = { kdp:[0,0,0,5,12,20,30,42,55,70,85,100], digital:[0,0,0,0,3,7,12,18,25,33,42,52], content:[0,0,1,3,6,10,15,22,30,42,55,70] };
 const SCEN = { pessimistic:0.35, realistic:1, optimistic:1.8 };
 const checkSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 
 document.getElementById("cards").innerHTML = AGENTS.map((a,i)=>`
   <article class="card hud" style="--accent:var(${a.accent})" tabindex="0" role="button" data-i="${i}" aria-label="Dossier for ${a.name}">
     <div class="who"><span class="dot"></span><div><h3>${a.name}</h3><div class="role">${a.role}</div></div></div>
-    <span class="pill">${checkSVG} Ship-ready</span>
+    <span class="pill">${checkSVG} ${a.status||'Ready'}</span>
     <div class="stats">
       <div class="stat"><div class="l">Tests</div><div class="v">${a.tests}</div></div>
       <div class="stat"><div class="l">Output</div><div class="v">${a.artifact}</div></div>
@@ -373,13 +408,12 @@ document.getElementById("cards").innerHTML = AGENTS.map((a,i)=>`
 
 const TL = [
   {c:"var(--muted)",   tx:"Wave 1 complete — 4 lanes scouted, 16 opportunities stress-tested", tag:"scout", tm:"Jul 27"},
-  {c:"var(--series-1)",tx:"Fleet built — 3 autonomous earners scaffolded to disk", tag:"build", tm:"Jul 27"},
-  {c:"var(--warn)",    tx:"De-risk pass — real bugs fixed in-place (Hashnode fields, OSV severity, empty ZIPs)", tag:"fix", tm:"Jul 27"},
-  {c:"var(--series-2)",tx:"Fix wave — product-factory paywall + pkgprobe PRO tier", tag:"fix", tm:"Jul 27"},
-  {c:"var(--warn)",    tx:"Adversarial test found an SVG view-source leak — patched &amp; re-verified", tag:"verify", tm:"Jul 27"},
+  {c:"var(--series-1)",tx:"Fleet built — 3 earners scaffolded to disk", tag:"build", tm:"Jul 27"},
   {c:"var(--good)",    tx:"All green — 88 tests passing (6 + 37 + 45)", tag:"test", tm:"Jul 27"},
-  {c:"var(--good)",    tx:"3 git repos committed on main, clean trees", tag:"commit", tm:"Jul 27"},
-  {c:"var(--good)",    tx:"Demoed live: research ✓ · products generated ✓ · CLI report ✓", tag:"demo", tm:"Jul 27"},
+  {c:"var(--series-2)",tx:"First Light blog redesigned + affiliate links armed (firstlight03-20)", tag:"deploy", tm:"Jul 28"},
+  {c:"var(--good)",    tx:"KDP Book #1 PUBLISHED — Large Print Word Search on Amazon", tag:"publish", tm:"Jul 28"},
+  {c:"var(--series-3)",tx:"4 earners launched in parallel — KDP #2 + Redbubble + Gumroad + YouTube", tag:"scale", tm:"Jul 28"},
+  {c:"var(--good)",    tx:"Dashboard revamped — 8 earners across 5 platforms", tag:"update", tm:"Jul 28"},
 ];
 const dot = c => `<span class="ic" style="--c:${c}">${checkSVG}</span>`;
 document.getElementById("tl").innerHTML = TL.map(e=>`<div class="ev">${dot(e.c)}<div class="tx">${e.tx}<span class="tag">${e.tag}</span></div><div class="tm">${e.tm}</div></div>`).join("");
