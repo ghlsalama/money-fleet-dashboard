@@ -381,7 +381,8 @@ const AGENTS = [
     steps:["Netlify + Stripe + webhook","Push + add secrets","Run real cycle + test purchase"],
     cav:["Not yet deployed","Distribution is the constraint"] },
 ];
-const MONTHLY = { kdp:[0,0,0,5,12,20,30,42,55,70,85,100], digital:[0,0,0,0,3,7,12,18,25,33,42,52], content:[0,0,1,3,6,10,15,22,30,42,55,70] };
+const MONTHLY = { blog:[0,0,1,3,6,10,15,22,30,42,55,70], kdp1:[0,0,0,5,12,20,30,42,55,70,85,100], redbubble:[0,0,0,0,3,7,12,18,25,33,42,52] };
+const PLOTTED = AGENTS.filter(a => MONTHLY[a.key]);
 const SCEN = { pessimistic:0.35, realistic:1, optimistic:1.8 };
 const checkSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 
@@ -448,14 +449,14 @@ const chart=document.getElementById("chart");
 const tip=document.getElementById("tip");
 let mode="rate", fmt="chart", scenario="realistic", scrub=12, playing=false, timer=null;
 const off=new Set();
-const vals=k=>MONTHLY[k].map(v=>Math.round(v*SCEN[scenario]));
+const Z12=[0,0,0,0,0,0,0,0,0,0,0,0];const vals=k=>(MONTHLY[k]||Z12).map(v=>Math.round(v*SCEN[scenario]));
 const cum=k=>{const a=vals(k);const o=[];let s=0;for(const v of a){s+=v;o.push(s);}return o;};
 const seriesValues=k=>mode==="cumulative"?cum(k):vals(k);
-const totalAt=m=>AGENTS.reduce((t,a)=>t+(mode==="cumulative"?cum(a.key)[m-1]:vals(a.key)[m-1]),0);
+const totalAt=m=>PLOTTED.reduce((t,a)=>t+(mode==="cumulative"?cum(a.key)[m-1]:vals(a.key)[m-1]),0);
 
 function draw(){
   chart.innerHTML="";
-  const allmax=Math.max(...AGENTS.map(a=>Math.max(...seriesValues(a.key))));
+  const allmax=Math.max(...PLOTTED.map(a=>Math.max(...seriesValues(a.key))));
   scale=niceScale(allmax);
   for(let t=0;t<=scale.max;t+=scale.step){
     const y=yOf(t);
@@ -464,7 +465,7 @@ function draw(){
   }
   for(let i=0;i<12;i++){const tx=el("text",{class:"axis",x:X(i),y:VB.h-VB.B+18,"text-anchor":"middle"}); tx.textContent="M"+(i+1); chart.appendChild(tx);}
   const reveal=scrub;
-  AGENTS.forEach(a=>{
+  PLOTTED.forEach(a=>{
     const valsA=seriesValues(a.key);
     const pts=[]; for(let i=0;i<reveal;i++) pts.push(X(i)+","+yOf(valsA[i]));
     const path=el("polyline",{class:"series "+a.cls,points:pts.join(" "),style:`stroke:var(${a.accent})`,"data-key":a.key});
@@ -474,7 +475,7 @@ function draw(){
     chart.appendChild(el("circle",{class:"node",cx:X(li),cy:yOf(valsA[li]),r:4.5,fill:`var(${a.accent})`}));
   });
   if(reveal===12){
-    const lead=AGENTS[0]; const lv=seriesValues(lead.key)[11];
+    const lead=PLOTTED[0]; const lv=seriesValues(lead.key)[11];
     const lbl=el("text",{class:"endlabel",x:X(11)+11,y:yOf(lv)+4}); lbl.textContent="$"+lv+(mode==="rate"?"/mo":""); chart.appendChild(lbl);
   }
   chart.appendChild(el("line",{class:"cross",id:"cross",x1:0,x2:0,y1:VB.T,y2:VB.h-VB.B}));
@@ -488,21 +489,21 @@ function draw(){
 function drawTable(){
   const th=document.getElementById("th"), tb=document.getElementById("tb"); th.innerHTML=""; tb.innerHTML="";
   const h1=el("th"); h1.textContent="Month"; th.appendChild(h1);
-  AGENTS.forEach(a=>{const c=el("th");c.textContent=a.name;th.appendChild(c);});
+  PLOTTED.forEach(a=>{const c=el("th");c.textContent=a.name;th.appendChild(c);});
   const ct=el("th"); ct.textContent="Total"; th.appendChild(ct);
   for(let i=0;i<12;i++){
     const tr=el("tr"); const m=el("td"); m.textContent="M"+(i+1); tr.appendChild(m); let tot=0;
-    AGENTS.forEach(a=>{const v=vals(a.key)[i]; tot+=v; const c=el("td");c.className="t";c.textContent="$"+v;tr.appendChild(c);});
+    PLOTTED.forEach(a=>{const v=vals(a.key)[i]; tot+=v; const c=el("td");c.className="t";c.textContent="$"+v;tr.appendChild(c);});
     const cc=el("td");cc.className="t";cc.textContent="$"+tot;tr.appendChild(cc); tb.appendChild(tr);
   }
 }
 
-document.getElementById("legend").innerHTML = AGENTS.map(a=>`<span class="lg" data-key="${a.key}" style="--c:var(${a.accent})"><span class="key"></span>${a.name}</span>`).join("");
+document.getElementById("legend").innerHTML = PLOTTED.map(a=>`<span class="lg" data-key="${a.key}" style="--c:var(${a.accent})"><span class="key"></span>${a.name}</span>`).join("");
 document.querySelectorAll(".lg").forEach(lg=>{
   lg.addEventListener("click",()=>{
     const k=lg.dataset.key; if(off.has(k)) off.delete(k); else off.add(k);
     lg.dataset.off=off.has(k);
-    if(off.size===AGENTS.length){off.clear();document.querySelectorAll(".lg").forEach(x=>x.dataset.off="false");}
+    if(off.size===PLOTTED.length){off.clear();document.querySelectorAll(".lg").forEach(x=>x.dataset.off="false");}
     draw();
   });
 });
@@ -513,11 +514,11 @@ chart.addEventListener("pointermove",e=>{
   let i=Math.round((vbX-VB.L)/VB.pw*11); i=Math.max(0,Math.min(scrub-1,i));
   const cx=X(i); const cr=document.getElementById("cross"); cr.setAttribute("x1",cx); cr.setAttribute("x2",cx); cr.style.opacity=.5;
   let rows=""; let tot=0;
-  AGENTS.forEach(a=>{const v=seriesValues(a.key)[i]; tot+=(mode==="cumulative"?cum(a.key)[i]:vals(a.key)[i]);
+  PLOTTED.forEach(a=>{const v=seriesValues(a.key)[i]; tot+=(mode==="cumulative"?cum(a.key)[i]:vals(a.key)[i]);
     rows+=`<div class="row"><span class="nm" style="--c:var(${a.accent})"><i></i>${a.name}</span><span class="val">$${v}</span></div>`;});
   tip.innerHTML=`<div class="tm">Month ${i+1}</div>${rows}<div class="row"><span class="nm">Total</span><span class="val">$${tot}</span></div>`;
   tip.style.opacity=1;
-  const px=(cx/VB.w)*r.width; const py=yOf(Math.max(...AGENTS.map(a=>seriesValues(a.key)[i])))/VB.h*r.height;
+  const px=(cx/VB.w)*r.width; const py=yOf(Math.max(...PLOTTED.map(a=>seriesValues(a.key)[i])))/VB.h*r.height;
   tip.style.left=px+"px"; tip.style.top=py+"px";
 });
 function hideTip(){tip.style.opacity=0; const cr=document.getElementById("cross"); if(cr) cr.style.opacity=0;}
