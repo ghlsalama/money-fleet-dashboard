@@ -555,5 +555,35 @@ tick(); setInterval(tick,1000);
 
 draw();
 </script>
+
+<!-- AUTO-UPDATE: fetches status.json and patches KPIs + agent statuses without manual edits -->
+<script>
+fetch('status.json').then(r=>r.json()).then(s=>{
+  const k=s.kpis||{};
+  const kpis=document.querySelectorAll('.kpi');
+  if(kpis[0]&&k.earners) kpis[0].querySelector('.v').textContent=k.earners;
+  if(kpis[1]&&k.live) kpis[1].querySelector('.v').textContent=k.live;
+  if(kpis[2]&&k.building!=null) kpis[2].querySelector('.v').textContent=k.building;
+  if(kpis[3]&&k.tests) kpis[3].querySelector('.v').textContent=k.tests;
+  const a=s.agents||{};
+  AGENTS.forEach(ag=>{ if(a[ag.key]){ ag.status=a[ag.key].status||ag.status; ag.artifact=a[ag.key].artifact||ag.artifact; }});
+  document.getElementById("cards").innerHTML=AGENTS.map((ag,i)=>`
+  <article class="card hud" style="--accent:var(${ag.accent})" tabindex="0" role="button" data-i="${i}" aria-label="Dossier for ${ag.name}">
+    <div class="who"><span class="dot"></span><div><h3>${ag.name}</h3><div class="role">${ag.role}</div></div></div>
+    <span class="pill">${checkSVG} ${ag.status||'Ready'}</span>
+    <div class="stats">
+      <div class="stat"><div class="l">Tests</div><div class="v">${ag.tests}</div></div>
+      <div class="stat"><div class="l">Output</div><div class="v">${ag.artifact}</div></div>
+      <div class="stat"><div class="l">Schedule</div><div class="v">${ag.sched}</div></div>
+      <div class="stat"><div class="l">Loop</div><div class="v">GH Actions</div></div>
+    </div>
+    <div class="next"><b>Next:</b> ${ag.next}</div>
+    <span class="more">View dossier <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span>
+  </article>`).join("");
+  const ft=document.querySelector('footer span:first-child');
+  if(ft&&s.updated) ft.textContent=`Auto-updated ${s.updated} · ${k.earners||7} earners · ${k.published||1} published`;
+}).catch(()=>{});
+</script>
+
 </body>
 </html>

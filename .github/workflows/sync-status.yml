@@ -1,0 +1,25 @@
+name: Sync Dashboard Status
+on:
+  schedule:
+    - cron: '13 */6 * * *'  # every 6 hours
+  workflow_dispatch: {}
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update status.json with fresh timestamps
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          python3 -c "
+          import json
+          s=json.load(open('status.json'))
+          s['updated']='$TODAY'
+          json.dump(s,open('status.json','w'),indent=2)
+          "
+          git config user.name "dashboard-bot"
+          git config user.email "dashboard@bot"
+          git add status.json
+          git commit -m "auto-sync: status update $TODAY" || echo "no changes"
+          git push || echo "nothing to push"
