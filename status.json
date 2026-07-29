@@ -1,12 +1,12 @@
 {
   "updated": "2026-07-29",
   "kpis": {
-    "earners": 7,
-    "platforms": 5,
-    "live": 7,
+    "earners": 8,
+    "platforms": 6,
+    "live": 4,
     "building": 0,
     "published": 2,
-    "tests": 88
+    "tests": 104
   },
   "agents": {
     "blog": {
@@ -36,6 +36,10 @@
     "factory": {
       "status": "LIVE",
       "artifact": "18 products"
+    },
+    "replyfox": {
+      "status": "READY \u00b7 BIG MOVE",
+      "artifact": "SaaS platform built"
     }
   }
 }
