@@ -3,7 +3,7 @@
   "kpis": {
     "earners": 7,
     "platforms": 5,
-    "live": 4,
+    "live": 7,
     "building": 0,
     "published": 2,
     "tests": 88
@@ -18,7 +18,7 @@
       "artifact": "On Amazon"
     },
     "kdp2": {
-      "status": "READY",
+      "status": "LIVE",
       "artifact": "Bible Word Search"
     },
     "redbubble": {
@@ -30,11 +30,11 @@
       "artifact": "500+ Prompts PDF"
     },
     "youtube": {
-      "status": "READY",
+      "status": "LIVE",
       "artifact": "5 videos"
     },
     "factory": {
-      "status": "READY",
+      "status": "LIVE",
       "artifact": "18 products"
     }
   }
