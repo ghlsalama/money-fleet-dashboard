@@ -3,8 +3,8 @@
   "kpis": {
     "earners": 10,
     "platforms": 8,
-    "live": 4,
-    "building": 2,
+    "live": 5,
+    "building": 0,
     "published": 2,
     "tests": 104
   },
@@ -39,15 +39,15 @@
     },
     "replyfox": {
       "status": "READY \u00b7 BIG MOVE",
-      "artifact": "SaaS platform (demo working)"
+      "artifact": "SaaS \u00b7 demo working"
     },
     "postpilot": {
-      "status": "BUILDING",
-      "artifact": "Social content SaaS"
+      "status": "READY \u00b7 VERIFIED",
+      "artifact": "120 posts generated"
     },
     "descfox": {
-      "status": "BUILDING",
-      "artifact": "Product copy SaaS"
+      "status": "READY \u00b7 VERIFIED",
+      "artifact": "Descriptions generated"
     }
   }
 }
